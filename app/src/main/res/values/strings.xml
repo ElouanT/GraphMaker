@@ -1,0 +1,19 @@
+<resources>
+    <string name="app_name">GraphMaker</string>
+    <string name="title">titre</string>
+    <string name="entrants">entrants</string>
+    <string name="location">adresse</string>
+    <string name="date">date</string>
+    <string name="team">team</string>
+    <string name="pseudo">pseudo</string>
+    <string name="character">personnage</string>
+    <string name="alt">skin</string>
+    <string name="next">Suivant</string>
+    <string name="generate">Générer</string>
+    <string name="save">Enregistrer</string>
+    <string name="add_character">Ajouter un personnage</string>
+    <string name="remove_character">Retirer un personnage</string>
+    <string name ="title_man">saison _ - man #</string>
+    <string name ="title_mdtk">meltdown throw knee #</string>
+    <string name ="title_sun">sun #</string>
+</resources>

@@ -1,0 +1,146 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/background_color"
+    tools:context=".GenerateGraph">
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <androidx.cardview.widget.CardView
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginHorizontal="15dp"
+                android:layout_marginTop="20dp"
+                android:layout_marginBottom="50dp"
+                app:cardBackgroundColor="@color/secondary_background_color"
+                app:cardCornerRadius="15dp">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:orientation="vertical">
+
+                    <com.google.android.material.textfield.TextInputLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:textColorHint="@color/secondary_color"
+                        app:boxBackgroundColor="@color/secondary_background_color"
+                        app:boxStrokeColor="@color/secondary_color"
+                        app:hintTextColor="@color/secondary_color">
+
+                        <com.google.android.material.textfield.TextInputEditText
+                            android:id="@+id/title"
+                            android:layout_width="match_parent"
+                            android:layout_height="56dp"
+                            android:foregroundTint="@color/secondary_color"
+                            android:hint="@string/title"
+                            android:inputType="text"
+                            android:maxLines="1"
+                            android:textColor="@color/white" />
+                    </com.google.android.material.textfield.TextInputLayout>
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:orientation="horizontal">
+
+                        <com.google.android.material.textfield.TextInputLayout
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="0.3"
+                            android:textColorHint="@color/secondary_color"
+                            app:boxBackgroundColor="@color/secondary_background_color"
+                            app:boxStrokeColor="@color/secondary_color"
+                            app:hintTextColor="@color/secondary_color">
+
+                            <com.google.android.material.textfield.TextInputEditText
+                                android:id="@+id/entrants"
+                                android:layout_width="match_parent"
+                                android:layout_height="match_parent"
+                                android:foregroundTint="@color/secondary_color"
+                                android:hint="@string/entrants"
+                                android:inputType="number"
+                                android:maxLines="1"
+                                android:textColor="@color/white" />
+                        </com.google.android.material.textfield.TextInputLayout>
+
+                        <com.google.android.material.textfield.TextInputLayout
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="0.7"
+                            android:textColorHint="@color/secondary_color"
+                            app:boxBackgroundColor="@color/secondary_background_color"
+                            app:boxStrokeColor="@color/secondary_color"
+                            app:hintTextColor="@color/secondary_color">
+
+                            <com.google.android.material.textfield.TextInputEditText
+                                android:id="@+id/location"
+                                android:layout_width="match_parent"
+                                android:layout_height="56dp"
+                                android:foregroundTint="@color/secondary_color"
+                                android:hint="@string/location"
+                                android:inputType="text"
+                                android:maxLines="1"
+                                android:text="Nantes, France"
+                                android:textColor="@color/white" />
+                        </com.google.android.material.textfield.TextInputLayout>
+                    </LinearLayout>
+
+                    <com.google.android.material.textfield.TextInputLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:textColorHint="@color/secondary_color"
+                        app:boxBackgroundColor="@color/secondary_background_color"
+                        app:boxStrokeColor="@color/secondary_color"
+                        app:hintTextColor="@color/secondary_color">
+
+                        <com.google.android.material.textfield.TextInputEditText
+                            android:id="@+id/date"
+                            android:layout_width="match_parent"
+                            android:layout_height="56dp"
+                            android:foregroundTint="@color/secondary_color"
+                            android:hint="@string/date"
+                            android:inputType="date"
+                            android:maxLines="1"
+                            android:textColor="@color/white" />
+                    </com.google.android.material.textfield.TextInputLayout>
+                </LinearLayout>
+
+            </androidx.cardview.widget.CardView>
+
+            <LinearLayout
+                android:id="@+id/linearLayout"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="vertical"></LinearLayout>
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:layout_width="match_parent"
+                android:layout_height="200dp">
+
+                <Button
+                    android:id="@+id/button"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/generate"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+        </LinearLayout>
+    </ScrollView>
+
+</androidx.constraintlayout.widget.ConstraintLayout>

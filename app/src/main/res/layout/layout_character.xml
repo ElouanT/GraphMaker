@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="56dp"
+    android:orientation="horizontal">
+
+    <com.google.android.material.textfield.MaterialAutoCompleteTextView
+        android:id="@+id/character"
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        android:layout_weight="0.7"
+        android:maxLines="1"
+        android:inputType="text"
+        android:backgroundTint="@color/secondary_color"
+        android:hint="@string/character"
+        android:paddingLeft="15dp"
+        android:textColor="@color/white"
+        android:textColorHighlight="@color/secondary_color"
+        android:textColorHint="@color/secondary_color"
+        android:textColorLink="@color/secondary_color"
+        android:textSize="16sp" />
+
+    <Spinner
+    android:id="@+id/spinner"
+    android:layout_width="0dp"
+    android:layout_height="match_parent"
+    android:layout_weight="0.3"
+    android:backgroundTint="@color/white"/>
+
+</LinearLayout>
