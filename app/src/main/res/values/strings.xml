@@ -1,3 +1,23 @@
 <resources>
-    <string name="app_name">GraphMaker</string>
+    <string name="app_name" translatable="false">GraphMaker</string>
+    <!-- General -->
+    <string name="previous">Previous</string>
+    <string name="next">Next</string>
+    <!-- Navigation -->
+    <string name="new_graph">New graph</string>
+    <string name="graph_generate">Generate</string>
+    <!-- Graph parameters -->
+    <string name="graph_title">Title</string>
+    <string name="graph_date">Date</string>
+    <string name="graph_location">Location</string>
+    <string name="graph_entrants">Entrants</string>
+    <!-- Player parameters -->
+    <string name="player_pseudo">Pseudo</string>
+    <string name="player_team">Team</string>
+    <string name="player_character">Character</string>
+    <string name="image_save">Save</string>
+    <string name="save_success">Image saved</string>
+    <string name="save_error">Error while saving image</string>
+    <string name="main_url">Enter a start.gg url</string>
+
 </resources>
