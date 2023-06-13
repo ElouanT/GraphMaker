@@ -15,6 +15,8 @@ class PlayerCard(context: Context) : FrameLayout(context)  {
 
     fun setPlayer(player: Player) {
         this.player = player
+        findViewById<EditText>(R.id.player_pseudo).setText(player.pseudo)
+        findViewById<EditText>(R.id.player_team).setText(player.team)
     }
 
     fun getPlayer(): Player {

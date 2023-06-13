@@ -15,4 +15,5 @@
     <string name="save_success">Image sauvegardée</string>
     <string name="save_error">Erreur lors de l\'enregistrement de l\'image</string>
     <string name="main_url">Entrer une url start.gg</string>
+    <string name="api_error_message">Impossible de récupérer les informations</string>
 </resources>

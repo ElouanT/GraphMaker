@@ -1,6 +1,7 @@
 package com.ovdr.graphmaker.views
 
 import android.content.Intent
+import android.os.Build
 import android.os.Bundle
 import android.widget.Button
 import android.widget.EditText
@@ -8,6 +9,7 @@ import android.widget.LinearLayout
 import androidx.appcompat.app.AppCompatActivity
 import com.ovdr.graphmaker.R
 import com.ovdr.graphmaker.model.Player
+import java.io.Serializable
 import java.text.SimpleDateFormat
 import java.util.*
 
@@ -22,7 +24,10 @@ class GraphFormActivity : AppCompatActivity() {
         var location: EditText = findViewById(R.id.form_location)
         var date: EditText = findViewById(R.id.form_date)
 
-        date.setText(SimpleDateFormat("dd/MM/yyyy").format(Date()))
+        // Instantiate
+        title.setText(intent.getStringExtra("title"))
+        entrants.setText(intent.getStringExtra("entrants"))
+        date.setText(intent.getStringExtra("date"))
 
         // Players
         var playerCards = ArrayList<PlayerCard>(8)
@@ -30,6 +35,11 @@ class GraphFormActivity : AppCompatActivity() {
 
         for (i in 1..8) {
             val playerCard = PlayerCard(this)
+            val player: Player? = intent.serializable("player$i")
+            if (player !== null) {
+                println(player.pseudo)
+                playerCard.setPlayer(player)
+            }
             playerList.addView(playerCard)
             playerCards.add(playerCard)
         }
@@ -49,6 +59,11 @@ class GraphFormActivity : AppCompatActivity() {
                 players
             )
         }
+    }
+
+    private inline fun <reified T : Serializable> Intent.serializable(key: String?): T? = when {
+        Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU -> getSerializableExtra(key, T::class.java)
+        else -> @Suppress("DEPRECATION") getSerializableExtra(key) as? T
     }
 
     fun nextActivity(title: String, entrants: String, location: String, date: String, players: ArrayList<Player>) {

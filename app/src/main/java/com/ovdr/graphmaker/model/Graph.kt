@@ -43,7 +43,7 @@ class Graph(context: Context, title: String, date: String, entrants: String, loc
         playerText.typeface = ResourcesCompat.getFont(context, R.font.montserrat_bold)
         playerText.color = Color.WHITE
         playerText.textAlign = Paint.Align.LEFT
-        playerText.textSize = 120f
+        playerText.textSize = 100f
 
         var p: Int = 0
 
@@ -68,9 +68,9 @@ class Graph(context: Context, title: String, date: String, entrants: String, loc
         titleText.isAntiAlias = true
         titleText.typeface = ResourcesCompat.getFont(context, R.font.montserrat_bold)
         titleText.color = ContextCompat.getColor(context, R.color.green_400)
-        titleText.textAlign = Paint.Align.LEFT
+        titleText.textAlign = Paint.Align.CENTER
         titleText.textSize = 70f
-        c.drawText(title, 67f, 196f, titleText)
+        c.drawText(title, 800f, 520f, titleText)
 
         // Texts
         val text: Paint = TextPaint()

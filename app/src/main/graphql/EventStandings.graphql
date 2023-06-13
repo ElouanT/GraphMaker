@@ -1,0 +1,17 @@
+query EventStandings($eventSlug: String!) {
+    event(slug: $eventSlug) {
+        name
+        numEntrants
+        startAt
+        standings(query: {
+            perPage: 8,
+            page: 1
+        }){
+            nodes {
+                entrant {
+                    name
+                }
+            }
+        }
+    }
+}

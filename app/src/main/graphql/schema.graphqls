@@ -1,0 +1,1300 @@
+directive @publicCache(cacheAge: Int) on FIELD
+interface ActionSet {
+    id: ID
+}
+
+enum ActivityState {
+    CREATED
+    ACTIVE
+    COMPLETED
+    READY
+    INVALID
+    CALLED
+    QUEUED
+}
+
+type Address {
+    id: ID
+    city: String
+    country: String
+    countryId: Int
+    state: String
+    stateId: Int
+}
+
+enum AuthorizationType {
+    TWITTER
+    TWITCH
+    STEAM
+    DISCORD
+    XBOX
+    EPIC
+    BATTLENET
+    MIXER
+}
+
+interface BracketConfig {
+    id: ID
+    bracketType: BracketType
+}
+
+enum BracketType {
+    SINGLE_ELIMINATION
+    DOUBLE_ELIMINATION
+    ROUND_ROBIN
+    SWISS
+    EXHIBITION
+    CUSTOM_SCHEDULE
+    MATCHMAKING
+    ELIMINATION_ROUNDS
+    RACE
+    CIRCUIT
+}
+
+type Character {
+    id: ID
+    images(type: String): [Image]
+    name: String
+}
+
+enum Comparator {
+    GREATER_THAN
+    GREATER_THAN_OR_EQUAL
+    EQUAL
+    LESS_THAN_OR_EQUAL
+    LESS_THAN
+}
+
+type ContactInfo {
+    id: ID
+    city: String
+    country: String
+    countryId: Int
+    name: String
+    nameFirst: String
+    nameLast: String
+    state: String
+    stateId: Int
+    zipcode: String
+}
+
+type Entrant {
+    id: ID
+    event: Event
+    initialSeedNum: Int
+    isDisqualified: Boolean
+    name: String
+    paginatedSets(
+        page: Int
+        perPage: Int
+        sortType: SetSortType
+        filters: SetFilters
+    ): SetConnection
+    participants: [Participant]
+    seeds: [Seed]
+    skill: Int
+    standing: Standing
+    stream: Streams
+    @deprecated(
+        reason: "DEPRECATED. Use streams instead, which supports multiple stream types and teams."
+    )
+    streams: [Streams]
+    team: Team
+}
+
+type EntrantConnection {
+    pageInfo: PageInfo
+    nodes: [Entrant]
+}
+
+type Event {
+    id: ID
+    checkInBuffer: Int
+    checkInDuration: Int
+    checkInEnabled: Boolean
+    competitionTier: Int
+    createdAt: Timestamp
+    deckSubmissionDeadline: Timestamp
+    entrantSizeMax: Int @deprecated(reason: "Migrate to teamRosterSize")
+    entrantSizeMin: Int @deprecated(reason: "Migrate to teamRosterSize")
+    entrants(query: EventEntrantPageQuery): EntrantConnection
+    hasDecks: Boolean
+    hasTasks: Boolean
+    images(type: String): [Image]
+    isOnline: Boolean
+    league: League
+    matchRulesMarkdown: String
+    name: String
+    numEntrants: Int
+    phaseGroups: [PhaseGroup]
+    phases(
+        state: ActivityState
+        phaseId: ID
+    ): [Phase]
+    prizingInfo: JSON
+    publishing: JSON
+    rulesMarkdown: String
+    rulesetId: Int
+    rulesetSettings: JSON @deprecated(reason: "Use ruleset")
+    sets(
+        page: Int
+        perPage: Int
+        sortType: SetSortType
+        filters: SetFilters
+    ): SetConnection
+    slug: String
+    standings(query: StandingPaginationQuery!): StandingConnection
+    startAt: Timestamp
+    state: ActivityState
+    stations(query: StationFilter): StationsConnection
+    teamManagementDeadline: Timestamp
+    teamNameAllowed: Boolean
+    teamRosterSize: TeamRosterSize
+    tournament: Tournament
+    type: Int
+    updatedAt: Timestamp
+    useEventSeeds: Boolean
+    userEntrant(userId: ID): Entrant
+    videogame: Videogame
+    waves(phaseId: ID): [Wave]
+}
+
+type EventConnection {
+    pageInfo: PageInfo
+    nodes: [Event]
+}
+
+input EventEntrantPageQuery {
+    page: Int
+    perPage: Int
+    sortBy: String
+    filter: EventEntrantPageQueryFilter
+}
+
+input EventEntrantPageQueryFilter {
+    name: String
+}
+
+input EventFilter {
+    videogameId: [ID]
+    type: [Int]
+    published: Boolean
+    id: ID
+    ids: [ID]
+    slug: String
+    fantasyEventId: ID
+    fantasyRosterHash: String
+}
+
+type EventOwner {
+    eventId: ID
+    email: String
+    gamerTag: String
+    fullName: String
+}
+
+type EventOwnerConnection {
+    pageInfo: PageInfo
+    nodes: [EventOwner]
+}
+
+input EventOwnersQuery {
+    page: Int = 1
+    perPage: Int = 25
+    sortBy: String
+}
+
+type EventTeam implements Team {
+    id: ID
+    discriminator: String
+    entrant: Entrant
+    @deprecated(reason: "Use the entrant field off the EventTeam type")
+    event: Event @deprecated(reason: "Use the event field off the EventTeam type")
+    globalTeam: GlobalTeam
+    images(type: String): [Image]
+    members(status: [TeamMemberStatus]): [TeamMember]
+    name: String
+}
+
+type EventTeamConnection {
+    pageInfo: PageInfo
+    nodes: [EventTeam]
+}
+
+type EventTier {
+    id: ID
+    name: String
+}
+
+type Game {
+    id: ID
+    images(type: String): [Image]
+    orderNum: Int
+    selections: [GameSelection]
+    stage: Stage
+    state: Int
+    winnerId: Int
+}
+
+type GameSelection {
+    id: ID
+    entrant: Entrant
+    orderNum: Int
+    participant: Participant
+    selectionType: GameSelectionType
+    selectionValue: Int
+}
+
+enum GameSelectionType {
+    CHARACTER
+}
+
+type GlobalTeam implements Team {
+    id: ID
+    discriminator: String
+    entrant: Entrant
+    @deprecated(reason: "Use the entrant field off the EventTeam type")
+    event: Event @deprecated(reason: "Use the event field off the EventTeam type")
+    eventTeams(query: TeamPaginationQuery): EventTeamConnection
+    images(type: String): [Image]
+    leagueTeams(query: TeamPaginationQuery): EventTeamConnection
+    members(status: [TeamMemberStatus]): [TeamMember]
+    name: String
+}
+
+type Image {
+    id: ID
+    height: Float
+    ratio: Float
+    type: String
+    url: String
+    width: Float
+}
+
+scalar JSON
+
+type League {
+    id: ID
+    addrState: String
+    city: String
+    countryCode: String
+    createdAt: Timestamp
+    currency: String
+    endAt: Timestamp
+    entrantCount: Int
+    eventOwners(query: EventOwnersQuery): EventOwnerConnection
+    eventRegistrationClosesAt: Timestamp
+    events(query: LeagueEventsQuery): EventConnection
+    finalEventId: Int @deprecated(reason: "No longer used")
+    hasOfflineEvents: Boolean
+    hasOnlineEvents: Boolean
+    hashtag: String
+    images(type: String): [Image]
+    isOnline: Boolean
+    lat: Float
+    links: TournamentLinks
+    lng: Float
+    mapsPlaceId: String
+    name: String
+    numProgressingToFinalEvent: Int @deprecated(reason: "No longer used")
+    numUniquePlayers: Int
+    postalCode: String
+    primaryContact: String
+    primaryContactType: String
+    publishing: JSON
+    registrationClosesAt: Timestamp
+    rules: String
+    shortSlug: String
+    showStandings: Boolean
+    slug: String
+    standings(query: StandingGroupStandingPageFilter): StandingConnection
+    startAt: Timestamp
+    state: Int
+    teamCreationClosesAt: Timestamp
+    tiers: [EventTier]
+    timezone: String
+    tournamentType: Int
+    updatedAt: Timestamp
+    url(
+        tab: String
+        relative: Boolean = true
+    ): String
+    venueAddress: String
+    venueName: String
+    videogames: [Videogame]
+}
+
+type LeagueConnection {
+    pageInfo: PageInfo
+    nodes: [League]
+}
+
+input LeagueEventsFilter {
+    search: PaginationSearchType
+    pointMappingGroupIds: [ID]
+    tierIds: [ID]
+    userId: ID
+    upcoming: Boolean
+    leagueEntrantId: ID
+}
+
+input LeagueEventsQuery {
+    page: Int = 1
+    perPage: Int = 25
+    sortBy: String
+    filter: LeagueEventsFilter
+}
+
+input LeaguePageFilter {
+    id: ID
+    ids: [ID]
+    ownerId: ID
+    afterDate: Timestamp
+    beforeDate: Timestamp
+    computedUpdatedAt: Timestamp
+    name: String
+    isFeatured: Boolean
+    hasBannerImages: Boolean
+    activeShops: Boolean
+    past: Boolean
+    published: Boolean
+    publiclySearchable: Boolean
+    upcoming: Boolean
+    videogameIds: [ID]
+}
+
+input LeagueQuery {
+    page: Int = 1
+    perPage: Int = 25
+    sortBy: String
+    filter: LeaguePageFilter
+    sort: TournamentPaginationSort
+}
+
+input LocationFilterType {
+    countryCode: String
+    state: String
+    city: String
+}
+
+interface MatchConfig {
+    id: ID
+    bracketType: BracketType
+}
+
+enum MatchConfigVerificationMethod {
+    TWITCH
+    STREAM_ME
+    ANY
+    MIXER
+    YOUTUBE
+}
+
+type Mutation {
+    deletePhase(phaseId: ID!): Boolean
+    deleteStation(stationId: ID!): Boolean
+    deleteWave(waveId: ID!): Boolean
+    resolveScheduleConflicts(
+        tournamentId: ID!
+        options: ResolveConflictsOptions
+    ): [Seed]
+    swapSeeds(phaseId: ID!, seed1Id: ID!, seed2Id: ID!): [Seed]
+    updatePhaseGroups(groupConfigs: [PhaseGroupUpdateInput]!): [PhaseGroup]
+    updatePhaseSeeding(
+        phaseId: ID!
+        seedMapping: [UpdatePhaseSeedInfo]!
+        options: UpdatePhaseSeedingOptions
+    ): Phase
+    upsertPhase(phaseId: ID, eventId: ID, payload: PhaseUpsertInput!): Phase
+    upsertStation(
+        stationId: ID
+        tournamentId: ID
+        fields: StationUpsertInput!
+    ): Stations
+    upsertWave(waveId: ID, tournamentId: ID, fields: WaveUpsertInput!): Wave
+}
+
+type PageInfo {
+    total: Int
+    totalPages: Int
+    page: Int
+    perPage: Int
+    sortBy: String
+    filter: JSON
+}
+
+input PaginationSearchType {
+    fieldsToSearch: [String]
+    searchString: String
+}
+
+type Participant {
+    id: ID
+    checkedIn: Boolean
+    checkedInAt: Timestamp
+    connectedAccounts: JSON
+    contactInfo: ContactInfo
+    email: String
+    entrants: [Entrant]
+    events: [Event]
+    gamerTag: String
+    images(type: String): [Image]
+    player: Player
+    prefix: String
+    requiredConnections: [ProfileAuthorization]
+    user: User
+    verified: Boolean
+}
+
+type ParticipantConnection {
+    pageInfo: PageInfo
+    nodes: [Participant]
+}
+
+input ParticipantPageFilter {
+    id: ID
+    ids: [ID]
+    eventIds: [ID]
+    search: PaginationSearchType
+    gamerTag: String
+    unpaid: Boolean
+    incompleteTeam: Boolean
+    missingDeck: Boolean
+    checkedIn: Boolean
+    notCheckedIn: Boolean
+}
+
+input ParticipantPaginationQuery {
+    page: Int = 1
+    perPage: Int = 25
+    sortBy: String
+    filter: ParticipantPageFilter
+}
+
+type Phase {
+    id: ID
+    bracketType: BracketType
+    event: Event
+    groupCount: Int
+    isExhibition: Boolean
+    name: String
+    numSeeds: Int
+    paginatedSeeds(query: SeedPaginationQuery!, eventId: ID): SeedConnection
+    @deprecated(reason: "Please use 'seeds' instead")
+    phaseGroups(query: PhaseGroupPageQuery): PhaseGroupConnection
+    phaseOrder: Int
+    seeds(query: SeedPaginationQuery!, eventId: ID): SeedConnection
+    sets(
+        page: Int
+        perPage: Int
+        sortType: SetSortType
+        filters: SetFilters
+    ): SetConnection
+    state: ActivityState
+    waves: [Wave]
+}
+
+type PhaseGroup {
+    id: ID
+    bracketType: BracketType
+    bracketUrl: String
+    displayIdentifier: String
+    firstRoundTime: Timestamp
+    numRounds: Int
+    paginatedSeeds(query: SeedPaginationQuery!, eventId: ID): SeedConnection
+    @deprecated(reason: "Please use 'seeds', which is now paginated")
+    paginatedSets(
+        page: Int
+        perPage: Int
+        sortType: SetSortType
+        filters: SetFilters
+    ): SetConnection
+    @deprecated(reason: "Please use 'sets', which is now paginated")
+    phase: Phase
+    progressionsOut: [Progression]
+    rounds: [Round]
+    seedMap: JSON
+    seeds(query: SeedPaginationQuery!, eventId: ID): SeedConnection
+    sets(
+        page: Int
+        perPage: Int
+        sortType: SetSortType
+        filters: SetFilters
+    ): SetConnection
+    standings(query: StandingGroupStandingPageFilter): StandingConnection
+    startAt: Timestamp
+    state: Int
+    tiebreakOrder: JSON
+    wave: Wave
+}
+
+type PhaseGroupConnection {
+    pageInfo: PageInfo
+    nodes: [PhaseGroup]
+}
+
+input PhaseGroupPageQuery {
+    page: Int
+    perPage: Int
+    sortBy: String
+    entrantIds: [ID]
+    filter: PhaseGroupPageQueryFilter
+}
+
+input PhaseGroupPageQueryFilter {
+    id: [ID]
+    waveId: ID
+}
+
+input PhaseGroupUpdateInput {
+    phaseGroupId: ID!
+    stationId: ID
+    waveId: ID
+}
+
+input PhaseUpsertInput {
+    name: String
+    groupCount: Int
+    bracketType: BracketType
+}
+
+type Player {
+    id: ID
+    gamerTag: String
+    prefix: String
+    rankings(limit: Int, videogameId: ID): [PlayerRank]
+    recentSets(opponentId: ID): [Set]
+    @deprecated(reason: "Use the sets field instead.")
+    recentStandings(
+        videogameId: ID
+        limit: Int
+    ): [Standing]
+    sets(
+        page: Int
+        perPage: Int
+        filters: SetFilters
+    ): SetConnection
+    user: User
+}
+
+type PlayerRank {
+    id: ID
+    rank: Int
+    title: String
+}
+
+type ProfileAuthorization {
+    id: ID
+    externalId: String
+    externalUsername: String
+    stream: Stream
+    type: AuthorizationType
+    url: String
+}
+
+type Progression {
+    id: ID
+    originOrder: Int
+    originPhase: Phase
+    originPhaseGroup: PhaseGroup
+    originPlacement: Int
+}
+
+type Query {
+    currentUser: User
+    entrant(id: ID!): Entrant
+    event(id: ID, slug: String): Event
+    league(id: ID, slug: String): League
+    leagues(query: LeagueQuery!): LeagueConnection
+    participant(id: ID!, isAdmin: Boolean): Participant
+    phase(id: ID): Phase
+    phaseGroup(id: ID): PhaseGroup
+    player(id: ID!): Player
+    seed(id: ID): Seed
+    set(id: ID!): Set
+    shop(id: ID, slug: String): Shop
+    stream(id: ID!): Streams
+    streamQueue(tournamentId: ID!, includePlayerStreams: Boolean): [StreamQueue]
+    team(id: ID, slug: String, inviteCode: String): Team
+    tournament(id: ID, slug: String): Tournament
+    tournaments(query: TournamentQuery!): TournamentConnection
+    user(id: ID, slug: String): User
+    videogame(id: ID, slug: String): Videogame
+    videogames(query: VideogameQuery!): VideogameConnection
+}
+
+type RaceBracketConfig implements BracketConfig {
+    automaticEndTime: Timestamp
+    id: ID
+    automaticStartTime: Timestamp
+    bracketType: BracketType
+    goalTargetComparator: Comparator
+    goalTargetValue: String
+    limitMode: RaceLimitMode
+    limitValue: Int
+    raceType: RaceType
+}
+
+enum RaceLimitMode {
+    BEST_ALL
+    FIRST_ALL
+    PLAYTIME
+}
+
+type RaceMatchConfig implements MatchConfig {
+    id: ID
+    bracketType: BracketType
+    playerReportingEnabled: Boolean
+    verificationMethods: [MatchConfigVerificationMethod]
+    verificationRequired: Boolean
+}
+
+enum RaceType {
+    GOALS
+    TIMED
+}
+
+input ResolveConflictsLockedSeedConfig {
+    eventId: ID!
+    numSeeds: Int!
+}
+
+input ResolveConflictsOptions {
+    lockedSeeds: [ResolveConflictsLockedSeedConfig]
+}
+
+type Round {
+    id: ID
+    bestOf: Int
+    number: Int
+    startAt: Timestamp
+}
+
+type Score {
+    label: String
+    value: Float
+    displayValue: String
+}
+
+type Seed {
+    id: ID
+    checkedInParticipants: JSON
+    entrant: Entrant
+    groupSeedNum: Int
+    isBye: Boolean
+    phase: Phase
+    phaseGroup: PhaseGroup
+    placeholderName: String
+    placement: Int
+    players: [Player]
+    progressionSeedId: Int
+    progressionSource: Progression
+    seedNum: Int
+    setRecordWithoutByes(phaseGroupId: ID!): JSON
+    standings(containerType: String): [Standing]
+}
+
+type SeedConnection {
+    pageInfo: PageInfo
+    nodes: [Seed]
+}
+
+input SeedPageFilter {
+    id: ID
+    entrantName: String
+    checkInState: [Int]
+    phaseGroupId: [ID]
+    eventCheckInGroupId: ID
+    phaseId: [ID]
+    eventId: ID
+    search: PaginationSearchType
+}
+
+input SeedPaginationQuery {
+    page: Int = 1
+    perPage: Int = 25
+    sortBy: String
+    filter: SeedPageFilter
+}
+
+type Set {
+    id: ID
+    completedAt: Timestamp
+    createdAt: Timestamp
+    displayScore(mainEntrantId: ID): String
+    event: Event
+    fullRoundText: String
+    game(orderNum: Int!): Game
+    games: [Game]
+    hasPlaceholder: Boolean
+    identifier: String
+    images(type: String): [Image]
+    lPlacement: Int
+    phaseGroup: PhaseGroup
+    round: Int
+    setGamesType: Int
+    slots(includeByes: Boolean = false): [SetSlot]
+    startAt: Timestamp
+    startedAt: Timestamp
+    state: Int
+    station: Stations
+    stream: Streams
+    totalGames: Int
+    vodUrl: String
+    wPlacement: Int
+    winnerId: Int
+}
+
+type SetConnection {
+    pageInfo: PageInfo
+    nodes: [Set]
+}
+
+input SetFilterLocation {
+    state: String
+    country: String
+    distanceFrom: SetFilterLocationDistanceFrom
+}
+
+input SetFilterLocationDistanceFrom {
+    point: SetFilterLocationDistanceFromPoint
+    radius: String
+}
+
+input SetFilterLocationDistanceFromPoint {
+    lat: Float
+    lon: Float
+}
+
+input SetFilters {
+    entrantIds: [ID]
+    entrantSize: [Int]
+    hasVod: Boolean
+    hideEmpty: Boolean
+    showByes: Boolean
+    isEventOnline: Boolean
+    location: SetFilterLocation
+    participantIds: [ID]
+    phaseGroupIds: [ID]
+    phaseIds: [ID]
+    eventIds: [ID]
+    tournamentIds: [ID]
+    playerIds: [ID]
+    roundNumber: Int
+    state: [Int]
+    stationIds: [ID]
+    stationNumbers: [Int]
+    updatedAfter: Timestamp
+}
+
+type SetSlot {
+    id: ID
+    entrant: Entrant
+    prereqId: String
+    prereqPlacement: Int
+    prereqType: String
+    seed: Seed
+    slotIndex: Int
+    standing: Standing
+}
+
+enum SetSortType {
+    NONE
+    CALL_ORDER
+    MAGIC
+    RECENT
+    STANDARD
+    ROUND
+}
+
+type Shop {
+    id: ID
+    levels(query: ShopLevelsQuery): ShopLevelConnection
+    messages(query: ShopOrderMessagesQuery): ShopOrderMessageConnection
+    name: String
+    slug: String
+    url: String
+}
+
+type ShopLevel {
+    id: ID
+    currAmount: Float
+    description: String
+    goalAmount: Float
+    images(type: String): [Image]
+    name: String
+}
+
+type ShopLevelConnection {
+    pageInfo: PageInfo
+    nodes: [ShopLevel]
+}
+
+input ShopLevelsQuery {
+    page: Int = 1
+    perPage: Int = 25
+    sortBy: String
+}
+
+type ShopOrderMessage {
+    id: ID
+    gamertag: String
+    message: String
+    name: String
+    player: Player
+    total: Float
+}
+
+type ShopOrderMessageConnection {
+    pageInfo: PageInfo
+    nodes: [ShopOrderMessage]
+}
+
+input ShopOrderMessagesQuery {
+    page: Int = 1
+    perPage: Int = 25
+    sortBy: String
+}
+
+enum SocialConnectionType {
+    TWITTER
+    TWITCH
+    DISCORD
+    MIXER
+    XBOX
+}
+
+type Stage {
+    id: ID
+    name: String
+}
+
+type Standing {
+    id: ID
+    container: StandingContainer
+    entrant: Entrant
+    isFinal: Boolean
+    metadata: JSON
+    placement: Int
+    player: Player
+    standing: Int
+    @deprecated(
+        reason: "The \\\"placement\\\" field is identical and will eventually replace \\\"standing\\\""
+    )
+    stats: StandingStats
+    totalPoints: Float
+}
+
+type StandingConnection {
+    pageInfo: PageInfo
+    nodes: [Standing]
+}
+
+union StandingContainer = Tournament | Event | PhaseGroup | Set
+input StandingGroupStandingPageFilter {
+    page: Int
+    perPage: Int
+    sortBy: String
+}
+
+input StandingPageFilter {
+    id: ID
+    ids: [ID]
+    search: PaginationSearchType
+}
+
+input StandingPaginationQuery {
+    page: Int = 1
+    perPage: Int = 25
+    sortBy: String
+    filter: StandingPageFilter
+}
+
+type StandingStats {
+    score: Score
+}
+
+input StationFilter {
+    page: Int
+    perPage: Int
+}
+
+type Stations {
+    id: ID
+    canAutoAssign: Boolean
+    clusterNumber: String
+    clusterPrefix: Int
+    enabled: Boolean
+    identifier: Int
+    numSetups: Int
+    number: Int
+    prefix: String
+    queue: JSON
+    queueDepth: Int
+    state: Int
+    updatedAt: Timestamp
+}
+
+type StationsConnection {
+    pageInfo: PageInfo
+    nodes: [Stations]
+}
+
+input StationUpsertInput {
+    number: Int!
+    clusterId: ID
+}
+
+type Stream {
+    id: ID
+    isOnline: Boolean
+    name: String
+    type: StreamType
+}
+
+type StreamQueue {
+    id: String
+    sets: [Set]
+    stream: Streams
+}
+
+type Streams {
+    id: ID
+    enabled: Boolean
+    followerCount: Int
+    isOnline: Boolean
+    numSetups: Int
+    parentStreamId: Int
+    streamGame: String
+    streamId: String
+    streamLogo: String
+    streamName: String
+    streamSource: StreamSource
+    streamStatus: String
+    streamType: Int
+    streamTypeId: Int
+}
+
+enum StreamSource {
+    TWITCH
+    HITBOX
+    STREAMME
+    MIXER
+}
+
+enum StreamType {
+    TWITCH
+    MIXER
+}
+
+interface Team {
+    id: ID
+    discriminator: String
+    entrant: Entrant
+    @deprecated(reason: "Use the entrant field off the EventTeam type")
+    event: Event @deprecated(reason: "Use the event field off the EventTeam type")
+    images(type: String): [Image]
+    members(status: [TeamMemberStatus]): [TeamMember]
+    name: String
+}
+
+type TeamActionSet implements ActionSet {
+    id: ID
+}
+
+type TeamConnection {
+    pageInfo: PageInfo
+    nodes: [Team]
+}
+
+type TeamMember {
+    id: ID
+    isAlternate: Boolean
+    isCaptain: Boolean
+    memberType: TeamMemberType
+    participant: Participant
+    player: Player
+    status: TeamMemberStatus
+}
+
+enum TeamMemberStatus {
+    UNKNOWN
+    ACCEPTED
+    INVITED
+    REQUEST
+    ALUM
+    HIATUS
+    OPEN_SPOT
+}
+
+enum TeamMemberType {
+    PLAYER
+    STAFF
+}
+
+input TeamPaginationFilter {
+    globalTeamId: ID
+    eventState: ActivityState
+    eventId: ID
+    eventIds: [ID]
+    minEntrantCount: Int
+    maxEntrantCount: Int
+    search: PaginationSearchType
+    type: Int
+    tournamentId: ID
+    memberStatus: [TeamMemberStatus]
+    videogameId: [ID]
+    isLeague: Boolean
+    upcoming: Boolean
+    past: Boolean
+    rosterComplete: Boolean
+    rosterIncomplete: Boolean
+}
+
+input TeamPaginationQuery {
+    page: Int = 1
+    perPage: Int = 25
+    sortBy: String
+    filter: TeamPaginationFilter
+}
+
+type TeamRosterSize {
+    maxAlternates: Int
+    maxPlayers: Int
+    minAlternates: Int
+    minPlayers: Int
+}
+
+scalar Timestamp
+
+input TopGameFilter {
+    gameNums: [Int]
+}
+
+type Tournament {
+    id: ID
+    addrState: String
+    admins(roles: [String]): [User]
+    city: String
+    countryCode: String
+    createdAt: Timestamp
+    currency: String
+    endAt: Timestamp
+    eventRegistrationClosesAt: Timestamp
+    events(limit: Int, filter: EventFilter): [Event]
+    hasOfflineEvents: Boolean
+    hasOnlineEvents: Boolean
+    hashtag: String
+    images(type: String): [Image]
+    isOnline: Boolean
+    isRegistrationOpen: Boolean
+    lat: Float
+    links: TournamentLinks
+    lng: Float
+    mapsPlaceId: String
+    name: String
+    numAttendees: Int
+    owner: User
+    participants(
+        query: ParticipantPaginationQuery!
+        isAdmin: Boolean
+    ): ParticipantConnection
+    postalCode: String
+    primaryContact: String
+    primaryContactType: String
+    publishing: JSON
+    registrationClosesAt: Timestamp
+    rules: String
+    shortSlug: String
+    slug: String
+    startAt: Timestamp
+    state: Int
+    stations(page: Int, perPage: Int): StationsConnection
+    streamQueue: [StreamQueue]
+    streams: [Streams]
+    teamCreationClosesAt: Timestamp
+    teams(query: TeamPaginationQuery!): TeamConnection
+    timezone: String
+    tournamentType: Int
+    updatedAt: Timestamp
+    url(
+        tab: String
+        relative: Boolean = true
+    ): String
+    venueAddress: String
+    venueName: String
+    waves: [Wave]
+}
+
+type TournamentConnection {
+    pageInfo: PageInfo
+    nodes: [Tournament]
+}
+
+type TournamentLinks {
+    facebook: String
+    discord: String
+}
+
+input TournamentLocationFilter {
+    distanceFrom: String
+    distance: String
+}
+
+input TournamentPageFilter {
+    id: ID
+    ids: [ID]
+    ownerId: ID
+    isCurrentUserAdmin: Boolean
+    countryCode: String
+    addrState: String
+    location: TournamentLocationFilter
+    afterDate: Timestamp
+    beforeDate: Timestamp
+    computedUpdatedAt: Timestamp
+    name: String
+    venueName: String
+    isFeatured: Boolean
+    isLeague: Boolean
+    hasBannerImages: Boolean
+    activeShops: Boolean
+    regOpen: Boolean
+    past: Boolean
+    published: Boolean
+    publiclySearchable: Boolean
+    staffPicks: Boolean
+    hasOnlineEvents: Boolean
+    topGames: TopGameFilter
+    upcoming: Boolean
+    videogameIds: [ID]
+    sortByScore: Boolean
+}
+
+enum TournamentPaginationSort {
+    startAt
+    endAt
+    eventRegistrationClosesAt
+    computedUpdatedAt
+}
+
+input TournamentQuery {
+    page: Int = 1
+    perPage: Int = 25
+    sortBy: String
+    filter: TournamentPageFilter
+    sort: TournamentPaginationSort
+}
+
+input UpdatePhaseSeedInfo {
+    seedId: ID!
+    seedNum: ID!
+    phaseGroupId: ID
+}
+
+input UpdatePhaseSeedingOptions {
+    strictMode: Boolean
+}
+
+type User {
+    authorizations(types: [SocialConnectionType]): [ProfileAuthorization]
+    id: ID
+    bio: String
+    birthday: String
+    discriminator: String
+    email: String
+    events(query: UserEventsPaginationQuery): EventConnection
+    genderPronoun: String
+    images(type: String): [Image]
+    leagues(query: UserLeaguesPaginationQuery): LeagueConnection
+    location: Address
+    name: String
+    player: Player
+    slug: String
+    tournaments(query: UserTournamentsPaginationQuery): TournamentConnection
+}
+
+input UserEventsPaginationFilter {
+    videogameId: [ID]
+    eventType: Int
+    minEntrantCount: Int
+    maxEntrantCount: Int
+    location: LocationFilterType
+    search: PaginationSearchType
+}
+
+input UserEventsPaginationQuery {
+    page: Int = 1
+    perPage: Int = 25
+    sortBy: String
+    filter: UserEventsPaginationFilter
+}
+
+input UserLeaguesPaginationFilter {
+    videogameId: [ID]
+    upcoming: Boolean
+    past: Boolean
+    search: PaginationSearchType
+}
+
+input UserLeaguesPaginationQuery {
+    page: Int = 1
+    perPage: Int = 25
+    sortBy: String
+    filter: UserLeaguesPaginationFilter
+}
+
+input UserTournamentsPaginationFilter {
+    past: Boolean
+    upcoming: Boolean
+    search: PaginationSearchType
+    videogameId: [ID]
+    tournamentView: String
+    excludeId: [ID]
+}
+
+input UserTournamentsPaginationQuery {
+    page: Int = 1
+    perPage: Int = 25
+    sortBy: String
+    filter: UserTournamentsPaginationFilter
+}
+
+type Videogame {
+    id: ID
+    characters: [Character]
+    displayName: String
+    images(type: String): [Image]
+    name: String
+    slug: String
+}
+
+type VideogameConnection {
+    pageInfo: PageInfo
+    nodes: [Videogame]
+}
+
+input VideogamePageFilter {
+    id: [ID]
+    name: String
+    forUser: ID
+}
+
+input VideogameQuery {
+    page: Int = 1
+    perPage: Int = 25
+    sortBy: String
+    filter: VideogamePageFilter
+}
+
+type Wave {
+    id: ID
+    identifier: String
+    startAt: Timestamp
+}
+
+input WaveUpsertInput {
+    identifier: String!
+    startAt: Timestamp!
+    endAt: Timestamp!
+}
+
