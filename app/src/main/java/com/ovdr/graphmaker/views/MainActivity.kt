@@ -11,6 +11,7 @@ import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import com.apollographql.apollo3.ApolloClient
 import com.example.EventStandingsQuery
+import com.ovdr.graphmaker.BuildConfig
 import com.ovdr.graphmaker.R
 import com.ovdr.graphmaker.model.Player
 import kotlinx.coroutines.*
@@ -19,7 +20,6 @@ import java.text.SimpleDateFormat
 import kotlin.coroutines.CoroutineContext
 
 class MainActivity() : AppCompatActivity(), CoroutineScope {
-    private val TOKEN = "Bearer 4afff373e6b359b284370776fa34845f"
     private var job: Job = Job()
 
     override val coroutineContext: CoroutineContext
@@ -51,7 +51,7 @@ class MainActivity() : AppCompatActivity(), CoroutineScope {
                 } else {
                     // API Fetch
                     val response = apolloClient.query(EventStandingsQuery(eventSlug = url))
-                        .addHttpHeader("Authorization", TOKEN).execute()
+                        .addHttpHeader("Authorization", BuildConfig.TOKEN).execute()
                     if (response.data !== null && response.data!!.event !== null) {
                         intent.putExtra("title", response.data!!.event!!.name)
                         intent.putExtra("entrants", response.data!!.event!!.numEntrants.toString())
