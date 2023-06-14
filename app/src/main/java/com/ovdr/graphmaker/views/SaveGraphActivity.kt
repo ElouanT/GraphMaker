@@ -98,11 +98,11 @@ class SaveGraphActivity : AppCompatActivity() {
         )
         val uri = contentResolver.insert(images, contentValues)
         try {
-            val bitmapDrawable = graph!!.getBackground() as BitmapDrawable
+            val bitmapDrawable = graph!!.background as BitmapDrawable
             val bitmap = bitmapDrawable.bitmap
             val outputStream = contentResolver.openOutputStream(Objects.requireNonNull(uri)!!)
             bitmap.compress(Bitmap.CompressFormat.JPEG, 100, outputStream)
-            Toast.makeText(this, R.string.image_save, Toast.LENGTH_SHORT).show()
+            Toast.makeText(this, R.string.save_success, Toast.LENGTH_SHORT).show()
         } catch (e: Exception) {
             Toast.makeText(this, R.string.save_error, Toast.LENGTH_SHORT)
                 .show()

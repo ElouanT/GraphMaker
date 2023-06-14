@@ -34,7 +34,7 @@ class GraphFormActivity : AppCompatActivity() {
         val playerList = findViewById<LinearLayout>(R.id.form_player_list)
 
         for (i in 1..8) {
-            val playerCard = PlayerCard(this)
+            val playerCard = PlayerCard(this, i)
             val player: Player? = intent.serializable("player$i")
             if (player !== null) {
                 println(player.pseudo)

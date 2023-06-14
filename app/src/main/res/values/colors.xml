@@ -19,4 +19,13 @@
 
     <color name="teal_300">#0F9177</color>
     <color name="teal_400">#0BDEB4</color>
+
+    <color name="placement_1">#F1C927</color>
+    <color name="placement_2">#9D9D9E</color>
+    <color name="placement_3">#B66123</color>
+    <color name="placement_4">#77CD5E</color>
+    <color name="placement_5">#77CD5E</color>
+    <color name="placement_6">#77CD5E</color>
+    <color name="placement_7">#77CD5E</color>
+    <color name="placement_8">#77CD5E</color>
 </resources>
