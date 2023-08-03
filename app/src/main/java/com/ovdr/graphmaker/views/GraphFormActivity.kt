@@ -10,7 +10,6 @@ import androidx.appcompat.app.AppCompatActivity
 import com.ovdr.graphmaker.R
 import com.ovdr.graphmaker.model.Player
 import java.io.Serializable
-import java.text.SimpleDateFormat
 import java.util.*
 
 class GraphFormActivity : AppCompatActivity() {
@@ -19,10 +18,10 @@ class GraphFormActivity : AppCompatActivity() {
         setContentView(R.layout.activity_graph_form)
 
         // General
-        var title: EditText = findViewById(R.id.form_title)
-        var entrants: EditText = findViewById(R.id.form_entrants)
-        var location: EditText = findViewById(R.id.form_location)
-        var date: EditText = findViewById(R.id.form_date)
+        val title: EditText = findViewById(R.id.form_title)
+        val entrants: EditText = findViewById(R.id.form_entrants)
+        val location: EditText = findViewById(R.id.form_location)
+        val date: EditText = findViewById(R.id.form_date)
 
         // Instantiate
         title.setText(intent.getStringExtra("title"))
@@ -30,14 +29,13 @@ class GraphFormActivity : AppCompatActivity() {
         date.setText(intent.getStringExtra("date"))
 
         // Players
-        var playerCards = ArrayList<PlayerCard>(8)
+        val playerCards = ArrayList<PlayerCard>(8)
         val playerList = findViewById<LinearLayout>(R.id.form_player_list)
 
         for (i in 1..8) {
             val playerCard = PlayerCard(this, i)
             val player: Player? = intent.serializable("player$i")
             if (player !== null) {
-                println(player.pseudo)
                 playerCard.setPlayer(player)
             }
             playerList.addView(playerCard)
@@ -47,7 +45,7 @@ class GraphFormActivity : AppCompatActivity() {
         // Button
         val generate = findViewById<Button>(R.id.form_button_generate)
         generate.setOnClickListener {
-            val players = ArrayList<Player>();
+            val players = ArrayList<Player>()
             for (i in 1..8) {
                 players.add(playerCards[i-1].getPlayer())
             }
@@ -66,7 +64,7 @@ class GraphFormActivity : AppCompatActivity() {
         else -> @Suppress("DEPRECATION") getSerializableExtra(key) as? T
     }
 
-    fun nextActivity(title: String, entrants: String, location: String, date: String, players: ArrayList<Player>) {
+    private fun nextActivity(title: String, entrants: String, location: String, date: String, players: ArrayList<Player>) {
         val intent = Intent(this, SaveGraphActivity::class.java)
         intent.putExtra("title", title)
         intent.putExtra(

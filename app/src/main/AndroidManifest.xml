@@ -28,7 +28,8 @@
             android:name=".views.GraphFormActivity"
             android:exported="false"
             android:launchMode="singleTask"
-            android:parentActivityName=".views.MainActivity"></activity>
+            android:configChanges="screenSize|orientation"
+            android:parentActivityName=".views.MainActivity"/>
         <activity
             android:name=".views.SaveGraphActivity"
             android:exported="false"

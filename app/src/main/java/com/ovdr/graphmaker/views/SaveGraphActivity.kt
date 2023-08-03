@@ -66,7 +66,7 @@ class SaveGraphActivity : AppCompatActivity() {
                 saveImage()
             } else {
                 ActivityCompat.requestPermissions(
-                    this, arrayOf<String>(
+                    this, arrayOf(
                         Manifest.permission.WRITE_EXTERNAL_STORAGE
                     ), REQUEST_CODE
                 )
@@ -100,7 +100,7 @@ class SaveGraphActivity : AppCompatActivity() {
         try {
             val bitmapDrawable = graph!!.background as BitmapDrawable
             val bitmap = bitmapDrawable.bitmap
-            val outputStream = contentResolver.openOutputStream(Objects.requireNonNull(uri)!!)
+            val outputStream = contentResolver.openOutputStream(Objects.requireNonNull(uri!!))
             bitmap.compress(Bitmap.CompressFormat.JPEG, 100, outputStream)
             Toast.makeText(this, R.string.save_success, Toast.LENGTH_SHORT).show()
         } catch (e: Exception) {

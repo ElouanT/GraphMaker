@@ -3,30 +3,28 @@ package com.ovdr.graphmaker.model
 import android.content.Context
 import android.graphics.*
 import android.graphics.drawable.BitmapDrawable
-import android.graphics.drawable.Drawable
 import android.text.TextPaint
 import android.view.View
 import androidx.core.content.ContextCompat
 import androidx.core.content.res.ResourcesCompat
 import com.ovdr.graphmaker.R
 
-class Graph(context: Context, title: String, date: String, entrants: String, location: String, players: ArrayList<Player>): View(context) {
-    // Main infos
-    val title: String = title
-    val date: String = date
-    val entrants: String = entrants
-    val location: String = location
-    // Players
-    val players: ArrayList<Player> = players
-    // Drawable rendered
-    lateinit var drawable: BitmapDrawable
+class Graph(
+    context: Context,
+    private val title: String,
+    private val date: String,
+    private val entrants: String,
+    private val location: String,
+    private val players: ArrayList<Player>
+    ): View(context) {
+    private lateinit var drawable: BitmapDrawable
 
     init {
         createDrawable()
     }
 
-    fun createDrawable() {
-        // Bitmap création
+    private fun createDrawable() {
+        // Bitmap creation
         val bitmap = Bitmap.createBitmap(1600, 2263, Bitmap.Config.ARGB_8888)
         val c = Canvas(bitmap)
 
@@ -36,26 +34,65 @@ class Graph(context: Context, title: String, date: String, entrants: String, loc
         background.bounds = bounds
         background.draw(c)
 
-
         // Players
         val playerText: Paint = TextPaint()
         playerText.isAntiAlias = true
         playerText.typeface = ResourcesCompat.getFont(context, R.font.montserrat_bold)
-        playerText.color = Color.WHITE
         playerText.textAlign = Paint.Align.LEFT
         playerText.textSize = 100f
 
-        var p: Int = 0
+        // Character scale map
+        val characterMap = resources.getStringArray(R.array.character_array).associateBy({ it.split("|")[0]}, {it.split("|")[1]})
 
-        for (player in players) {
-            // Team
-
-            // Pseudo
-            c.drawText(player.pseudo, 520f, 685f+p*(35f+153f), playerText)
-
+        for ((playerIndex, player) in players.withIndex()) {
             // Characters
+            val characters = player.characters.filter { character -> character !== ""}
+            var offset = 0
+            for (character in characters.reversed()) {
+                // Get drawable
+                val characterId = context.resources.getIdentifier(
+                    "character_$character",
+                    "drawable",
+                    context.packageName
+                )
 
-            p++
+                // Create bitmap
+                var characterBitmap = BitmapFactory.decodeResource(context.resources, characterId)
+                val width = characterBitmap.width
+                val height = characterBitmap.height
+
+                // Crop
+                val data = characterMap[character]!!
+                val x = data.substringAfter("(").substringBefore(";").toInt() * height / 500
+                val y = data.substringAfter(";").substringBefore(")").toInt() * height / 500
+                val h = data.substringAfter(":").substringBefore("-").toInt() * height / 500
+                val w = data.substringAfter("-").toInt() * height / 500
+
+                characterBitmap = Bitmap.createBitmap(characterBitmap,
+                        0,
+                        maxOf(0, (y-(h/2))),
+                        width,
+                        minOf(height-(y-(h/2)), h)
+                    )
+
+                // Scale and draw
+                val characterDrawable = BitmapDrawable(resources, characterBitmap)
+                characterDrawable.setBounds(
+                    (1250+50*characters.size) - (x+w/2)*153/h - offset,
+                    578+playerIndex*(35+153),
+                    (1250+50*characters.size) - offset + (width-x-w/2)*153/h,
+                    578+playerIndex*(35+153) + 153,
+                )
+                offset += w*153/h +  (60/characters.size)
+                characterDrawable.draw(c)
+            }
+
+            // Shadow
+            playerText.color = ContextCompat.getColor(context, R.color.green_400)
+            c.drawText(player.pseudo, 405f, 690f+playerIndex*(35f+153f), playerText)
+            // Pseudo
+            playerText.color = Color.WHITE
+            c.drawText(player.pseudo, 400f, 685f+playerIndex*(35f+153f), playerText)
         }
 
         // Template foreground
